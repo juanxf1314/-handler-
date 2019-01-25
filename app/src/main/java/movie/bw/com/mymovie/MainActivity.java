@@ -1,10 +1,12 @@
 package movie.bw.com.mymovie;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -53,5 +55,29 @@ public class MainActivity extends AppCompatActivity {
 
         myHandler.sendEmptyMessage(1);
         mTextView = findViewById(R.id.tv_test);
+    }
+
+    /**
+     * LruCache的使用方法如下：
+     */
+    public class BitmapLruCache extends LruCache<String, Bitmap> {
+
+        // 设置缓存大小，建议当前应用可用最大内存的八分之一，
+        // 即(int)(Runtime.getRuntime().maxMemory()/1024/8)
+        public BitmapLruCache(int maxSize) {
+            super(maxSize);
+        }
+
+        // 计算的方法，需当前节点的内存大小，这要重写，不然返回1
+        @Override
+        protected int sizeOf(String key, Bitmap value) {
+            return super.sizeOf(key, value);
+        }
+
+        // 当节点移除时该方法会回调，可根据需求组来决定是否重写该方法
+        @Override
+        protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
+            super.entryRemoved(evicted, key, oldValue, newValue);
+        }
     }
 }
